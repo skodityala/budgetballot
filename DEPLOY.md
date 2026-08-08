@@ -148,8 +148,8 @@ The README and deck both carry a placeholder:
 grep -rn "LIVE_DEMO_URL" README.md deck/index.html
 ```
 
-Replace `<!-- LIVE_DEMO_URL -->` in `README.md:13` with the real URL, and update
-the "Live demo" card on slide 10 of `deck/index.html`. Commit and push — judges
+Replace `<!-- LIVE_DEMO_URL -->` in **`README.md:23`** with the real URL, and
+update the live-demo line in **`deck/index.html:289`**. Commit and push — judges
 often click the README link before anything else.
 
 ---

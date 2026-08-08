@@ -4,6 +4,29 @@ Everything the human team needs to do that this build didn't (and couldn't) do i
 
 ---
 
+## 0. Document index — start here
+
+| Document | What it's for |
+|---|---|
+| **[`README.md`](./README.md)** | The judge-facing document. Positioning line, verified ASCII charts generated from real engine output, accessibility section, security posture, data provenance. |
+| **[`DEPLOY.md`](./DEPLOY.md)** | **Deploy instructions.** Render (recommended) and Vercel, key generation, 90-second post-deploy verification, troubleshooting table. |
+| **[`SUBMISSION.md`](./SUBMISSION.md)** | **Ready-to-paste Devpost copy.** Tagline (72 chars), description (453 words), "How we built it", "Challenges", "What's next", plus a field-by-field checklist and language guardrails. |
+| **[`SELF-REVIEW.md`](./SELF-REVIEW.md)** | Adversarial scoring against all six judging criteria, the worst finding and its fix, explicit limits of what was verified, and the ordered list of remaining human actions. |
+| [`DEMO-SCRIPT.md`](./DEMO-SCRIPT.md) | Video walkthrough script. |
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Deeper technical detail on the dual-engine design. |
+
+**Verification commands (both should be green at all times):**
+
+```bash
+npx vitest run                # 90 tests
+./scripts/verify-runtime.sh   # 26 live HTTP checks against a real server
+```
+
+**Still human tasks:** deploying, recording the video, team info, the Devpost form
+itself, and pasting the live URL into `README.md:23` and `deck/index.html:289`.
+
+---
+
 ## 1. Environment variables
 
 Set these in the deploy environment (Vercel / Fly / Render / Railway / etc.).
