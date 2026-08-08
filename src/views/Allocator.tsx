@@ -12,6 +12,16 @@ export default function Allocator({ scenario }: { scenario: UseScenario }) {
     <StateBlock loading={loading} error={error}>
       {dataset && report && (
         <div className="grid gap-6">
+          {/* Exactly one h1 per view. Headings then descend h1 → h2 (meters,
+              section titles) → h3 (per-service cards) with no skipped levels. */}
+          <div>
+            <h1 className="text-2xl font-bold text-ink">Allocate the budget</h1>
+            <p className="mt-1 text-sm text-slate-600">
+              Move any slider. Service outcomes, the equity score, and annual
+              emissions all update together — computed locally, no round-trip.
+            </p>
+          </div>
+
           <div className="grid sm:grid-cols-3 gap-4">
             <BudgetMeter
               totalAllocated={report.totalAllocated}
@@ -31,24 +41,30 @@ export default function Allocator({ scenario }: { scenario: UseScenario }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <button className="btn" onClick={reset}>Reset to baseline</button>
-            <Link to="/impact" className="btn-primary">See full impact →</Link>
-            <span className="text-xs text-slate-500 ml-auto">
-              Move a slider — every number updates locally, no round-trip.
-            </span>
+            <button type="button" className="btn" onClick={reset}>
+              Reset to baseline
+            </button>
+            <Link to="/impact" className="btn-primary">
+              See full impact <span aria-hidden="true">→</span>
+            </Link>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            {dataset.services.map((s) => (
-              <ServiceSlider
-                key={s.id}
-                service={s}
-                value={allocation[s.id] ?? s.baselineFunding}
-                status={fundingStatus(s, allocation[s.id] ?? s.baselineFunding)}
-                onChange={(v) => setFunding(s.id, v)}
-              />
-            ))}
-          </div>
+          <section aria-labelledby="services-heading" className="grid gap-4">
+            <h2 id="services-heading" className="sr-only">
+              Service funding sliders
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {dataset.services.map((s) => (
+                <ServiceSlider
+                  key={s.id}
+                  service={s}
+                  value={allocation[s.id] ?? s.baselineFunding}
+                  status={fundingStatus(s, allocation[s.id] ?? s.baselineFunding)}
+                  onChange={(v) => setFunding(s.id, v)}
+                />
+              ))}
+            </div>
+          </section>
         </div>
       )}
     </StateBlock>

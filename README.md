@@ -64,6 +64,38 @@ This is the explainability thesis made visible in one paragraph a judge can read
 
 ---
 
+## Accessibility
+
+**Target: WCAG 2.1 Level AA.** This was treated as a feature, not a checkbox —
+judging criterion 4 names accessibility explicitly, and a budget tool that
+excludes disabled residents fails at its own premise.
+
+What was done, and what it buys:
+
+| Area | What's implemented |
+|---|---|
+| **Keyboard** | Every control is reachable and operable by keyboard. The 12 funding sliders are native `<input type="range">`, so arrow keys / Home / End work with no custom JS. `<details>`/`<summary>` powers the "Why this number?" disclosure — natively keyboard-operable with correct expanded state. A **skip-to-content** link is the first item in the tab order on every view. |
+| **Focus visible** | One `:focus-visible` treatment applied globally — a 3 px teal-700 outline with 2 px offset (4 px on sliders). `outline: none` is never used without a replacement. |
+| **Screen readers — sliders** | Each slider has a bound `<label>` plus `aria-valuetext` that announces **"168 million dollars, boosted above baseline"** rather than the raw `168000000`. `aria-describedby` supplies the min / baseline / effective-cap context that sighted users read below the control. |
+| **Live regions** | The budget, equity, and emissions readouts are wrapped in `aria-live="polite"`, so moving a slider *announces* the new totals instead of changing silently. The narrated paragraph on the Impact view is also a live region. The live region wraps only the changing value — the static label isn't re-announced on every keystroke. |
+| **Route changes** | SPA navigation normally says nothing. A `RouteAnnouncer` updates `document.title` and announces "Impact view loaded" through a polite live region on every route change. |
+| **Colour is never the only signal** (WCAG 1.4.1) | `FundingStatus` renders a glyph **▲ / ▬ / ▼** *and* the word "boosted / steady / cut" alongside the colour. Carbon and equity deltas render **↓ / ↑ / →** plus "lower / higher / unchanged than baseline". Budget state reads "⚠ OVER BUDGET" / "✓ on budget". Every meter bar carries `role="img"` with a text `aria-label`. The whole UI is readable in greyscale. |
+| **Contrast** | Every foreground/background pair in the palette was measured against the WCAG formula. **Two real failures were found and fixed:** the accent colour `#0ea5a4` gave only **3.03:1** against white, so both `.btn-primary` (white on accent) and the accent eyebrow text failed AA for normal text. Accent is now teal-700 `#0f766e` — **5.47:1**. Everything else passes: body text 7.58:1, status chips 5.21–9.45:1, headings 17.85:1. |
+| **Semantics** | Exactly one `<h1>` per view, headings descend without skipping levels, nav is a real `<ul>` with `aria-current="page"`, the comparison table has a `<caption>` and `scope="col"` / `scope="row"` headers, and the four identical "Load" buttons get distinguishing screen-reader text ("Load the Austerity scenario"). Real `<button>` and `<label>` elements throughout — no `div` with an onClick. |
+| **Reduced motion** | `@media (prefers-reduced-motion: reduce)` collapses all transitions and animations. The meter bars animate width by default; they jump instantly for users who ask. |
+| **Touch targets** | Slider controls are 24 px tall to stay comfortable on a phone. |
+
+Verified by keyboard-only walkthrough of allocate → impact → compare, and by
+computing every contrast ratio programmatically rather than eyeballing it.
+
+**Honest limits:** this has not been through a full screen-reader audit with
+VoiceOver/NVDA/JAWS on real hardware, and there is no automated axe-core pass in
+CI (adding a headless browser conflicted with the no-new-runtime-dependencies
+constraint). The work above is hand-verified against the AA success criteria, not
+certified.
+
+---
+
 ## Quick start
 
 ```bash

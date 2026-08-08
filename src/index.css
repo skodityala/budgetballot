@@ -13,6 +13,77 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* ---------------------------------------------------------------------------
+   Accessibility foundations — WCAG 2.1 AA
+   --------------------------------------------------------------------------- */
+
+/* Visually hidden but available to screen readers. Used for the skip link and
+   for text alternatives that duplicate a colour signal. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip-to-content: hidden until focused, then pinned top-left. Lets a keyboard
+   user jump past the nav on every view. */
+.skip-link {
+  @apply sr-only;
+}
+.skip-link:focus {
+  @apply not-sr-only fixed top-2 left-2 z-50 rounded-lg bg-slate-900 px-4 py-2
+         text-sm font-medium text-white shadow-lg;
+  clip: auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  white-space: normal;
+}
+
+/* A single visible focus treatment for every interactive element. We never set
+   `outline: none` without this replacement. :focus-visible keeps it off for
+   mouse clicks but on for keyboard/AT navigation. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #0f766e; /* teal-700 — 5.47:1 on white */
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* Range inputs need the focus ring on the whole control AND a bigger thumb so
+   the target is comfortable on touch (WCAG 2.5.5 target size). */
+input[type="range"] {
+  @apply h-6 cursor-pointer;
+  accent-color: #0f766e;
+}
+input[type="range"]:focus-visible {
+  outline: 3px solid #0f766e;
+  outline-offset: 4px;
+}
+
+/* Honor prefers-reduced-motion: kill transitions/animations for users who ask.
+   The meter bars animate width by default; this makes them jump instead. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Components
+   --------------------------------------------------------------------------- */
+
 .card {
   @apply bg-white rounded-xl shadow-sm ring-1 ring-slate-200 p-5;
 }
@@ -21,6 +92,10 @@ body {
   @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
 }
 
+/* Funding status chips. Colour is a redundant cue only — each chip also renders
+   a glyph (▲ ▬ ▼) and the status word, so the meaning survives greyscale and
+   colour-blindness. Contrast verified: emerald-700/emerald-50 5.21:1,
+   rose-700/rose-50 5.72:1, slate-700/slate-100 9.45:1 — all AA for normal text. */
 .chip-boosted { @apply chip bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200; }
 .chip-steady  { @apply chip bg-slate-100 text-slate-700 ring-1 ring-slate-200; }
 .chip-cut     { @apply chip bg-rose-50 text-rose-700 ring-1 ring-rose-200; }
@@ -30,6 +105,8 @@ body {
          ring-1 ring-slate-300 bg-white text-slate-800 hover:bg-slate-50
          disabled:opacity-50 disabled:cursor-not-allowed transition;
 }
+/* bg-accent is teal-700 (#0f766e): white-on-accent is 5.47:1, AA for normal
+   text. The previous #0ea5a4 measured 3.03:1 and failed. */
 .btn-primary {
-  @apply btn bg-accent text-white ring-accent hover:bg-teal-700;
+  @apply btn bg-accent text-white ring-accent hover:bg-teal-800;
 }

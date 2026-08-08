@@ -21,23 +21,28 @@ export default function Landing() {
             <span className="font-medium text-ink">carbon emissions</span>.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link to="/allocate" className="btn-primary">Try the allocator →</Link>
+            <Link to="/allocate" className="btn-primary">
+              Try the allocator <span aria-hidden="true">→</span>
+            </Link>
             <Link to="/about" className="btn">How the model works</Link>
           </div>
         </div>
       </section>
 
-      <section className="grid sm:grid-cols-3 gap-4">
+      <section className="grid sm:grid-cols-3 gap-4" aria-labelledby="why-heading">
+        <h2 id="why-heading" className="sr-only">
+          What makes BudgetBallot different
+        </h2>
         <div className="card">
           <div className="text-xs uppercase tracking-wide text-slate-500">Transparent</div>
-          <div className="mt-1 font-semibold text-ink">Every number shows its factors.</div>
+          <h3 className="mt-1 font-semibold text-ink text-base">Every number shows its factors.</h3>
           <p className="mt-2 text-sm text-slate-600">
             No opaque coefficients. Click any impact number and see exactly which inputs produced it.
           </p>
         </div>
         <div className="card">
           <div className="text-xs uppercase tracking-wide text-slate-500">Verifiable</div>
-          <div className="mt-1 font-semibold text-ink">Dual-implementation parity.</div>
+          <h3 className="mt-1 font-semibold text-ink text-base">Dual-implementation parity.</h3>
           <p className="mt-2 text-sm text-slate-600">
             The impact model exists twice — in TypeScript (client) and JavaScript (server) — and an
             automated parity test proves they agree on every input.
@@ -45,7 +50,7 @@ export default function Landing() {
         </div>
         <div className="card">
           <div className="text-xs uppercase tracking-wide text-slate-500">Coupled</div>
-          <div className="mt-1 font-semibold text-ink">Budget vs. climate, side by side.</div>
+          <h3 className="mt-1 font-semibold text-ink text-base">Budget vs. climate, side by side.</h3>
           <p className="mt-2 text-sm text-slate-600">
             Move a slider; three numbers move together — service outcome, equity, and annual tCO₂e.
             The trade-offs cities actually face, made visible.

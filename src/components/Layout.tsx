@@ -12,33 +12,62 @@ const nav = [
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-full flex flex-col">
+      {/* Skip-to-content: first thing in the tab order on every view, so a
+          keyboard or screen-reader user can bypass the nav. Visually hidden
+          until focused (see .skip-link in index.css). */}
+      <a href="#main" className="skip-link">
+        Skip to main content
+      </a>
+
       <header className="border-b border-slate-200 bg-white sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
-          <NavLink to="/" className="flex items-center gap-2 font-semibold text-ink">
-            <img src="/favicon.svg" alt="" className="h-6 w-6" />
+          <NavLink
+            to="/"
+            className="flex items-center gap-2 font-semibold text-ink"
+            aria-label="BudgetBallot — home"
+          >
+            {/* Decorative: the adjacent text already names the product, so an
+                empty alt keeps screen readers from announcing it twice. */}
+            <img src="/favicon.svg" alt="" aria-hidden="true" className="h-6 w-6" />
             <span>BudgetBallot</span>
           </NavLink>
-          <nav className="ml-auto flex gap-1 text-sm">
-            {nav.map((n) => (
-              <NavLink
-                key={n.to}
-                to={n.to}
-                end={n.end}
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-lg transition ${
-                    isActive
-                      ? "bg-slate-900 text-white"
-                      : "text-slate-700 hover:bg-slate-100"
-                  }`
-                }
-              >
-                {n.label}
-              </NavLink>
-            ))}
+
+          {/* A real list, so assistive tech announces "5 items" and users can
+              navigate item-by-item. aria-current="page" is set by NavLink. */}
+          <nav className="ml-auto" aria-label="Main">
+            <ul className="flex gap-1 text-sm list-none m-0 p-0">
+              {nav.map((n) => (
+                <li key={n.to}>
+                  <NavLink
+                    to={n.to}
+                    end={n.end}
+                    className={({ isActive }) =>
+                      `block px-3 py-1.5 rounded-lg transition ${
+                        isActive
+                          ? "bg-slate-900 text-white"
+                          : "text-slate-700 hover:bg-slate-100"
+                      }`
+                    }
+                  >
+                    {n.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </nav>
         </div>
       </header>
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6">{children}</main>
+
+      {/* tabIndex={-1} makes this a valid target for the skip link without
+          putting it in the normal tab order. */}
+      <main
+        id="main"
+        tabIndex={-1}
+        className="flex-1 max-w-6xl w-full mx-auto px-4 py-6"
+      >
+        {children}
+      </main>
+
       <footer className="border-t border-slate-200 bg-white">
         <div className="max-w-6xl mx-auto px-4 py-4 text-xs text-slate-500 flex flex-wrap gap-x-4 gap-y-1">
           <span>BudgetBallot — participatory budgeting with transparent service, equity, and carbon modeling.</span>

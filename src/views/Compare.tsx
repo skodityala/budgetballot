@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import StateBlock from "../components/StateBlock";
 import type { UseScenario } from "../state/useScenario";
 import { computeImpact } from "../engine/impact";
@@ -57,8 +58,10 @@ export default function Compare({ scenario }: { scenario: UseScenario }) {
     <StateBlock loading={loading} error={error}>
       {dataset && (
         <div className="grid gap-4">
-          <section className="card">
-            <div className="text-xs uppercase tracking-wide text-slate-500">Compare</div>
+          <section className="card" aria-labelledby="compare-heading">
+            <h1 id="compare-heading" className="text-2xl font-bold text-ink">
+              Compare scenarios
+            </h1>
             <div className="mt-1 font-medium text-ink">
               Your allocation versus three reference scenarios
             </div>
@@ -69,23 +72,36 @@ export default function Compare({ scenario }: { scenario: UseScenario }) {
 
           <div className="card overflow-x-auto">
             <table className="w-full text-sm">
+              <caption className="sr-only">
+                Comparison of your allocation against baseline, transit-first,
+                roads-first, and austerity scenarios, showing total allocated,
+                equity score, projected annual emissions, and the change in
+                emissions for each.
+              </caption>
               <thead>
                 <tr className="text-left text-slate-500 border-b border-slate-200">
-                  <th className="py-2 pr-4">Scenario</th>
-                  <th className="py-2 pr-4 text-right">Allocated</th>
-                  <th className="py-2 pr-4 text-right">Equity</th>
-                  <th className="py-2 pr-4 text-right">Emissions</th>
-                  <th className="py-2 pr-4 text-right">Δ emissions</th>
-                  <th className="py-2 pr-0"></th>
+                  {/* scope="col" ties each data cell to its header for AT. */}
+                  <th scope="col" className="py-2 pr-4">Scenario</th>
+                  <th scope="col" className="py-2 pr-4 text-right">Allocated</th>
+                  <th scope="col" className="py-2 pr-4 text-right">Equity</th>
+                  <th scope="col" className="py-2 pr-4 text-right">Emissions</th>
+                  <th scope="col" className="py-2 pr-4 text-right">Δ emissions</th>
+                  <th scope="col" className="py-2 pr-0">
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row, i) => (
                   <tr key={row.name} className="border-b border-slate-100 last:border-b-0">
-                    <td className="py-3 pr-4 font-medium">{row.name}</td>
+                    <th scope="row" className="py-3 pr-4 font-medium text-left">
+                      {row.name}
+                    </th>
                     <td className="py-3 pr-4 text-right tabular-nums">
                       {fmtMoney(row.totalAllocated)}
-                      {row.overBudget ? <span className="ml-1 text-xs text-rose-700">(over)</span> : null}
+                      {row.overBudget ? (
+                        <span className="ml-1 text-xs text-rose-700">(over)</span>
+                      ) : null}
                     </td>
                     <td className="py-3 pr-4 text-right tabular-nums">
                       {row.equityScore.toFixed(1)}{" "}
@@ -111,11 +127,16 @@ export default function Compare({ scenario }: { scenario: UseScenario }) {
                             : "text-slate-700"
                       }`}
                     >
+                      {/* Arrow + sign, so the direction survives greyscale. */}
+                      <span aria-hidden="true">
+                        {row.carbonDelta < 0 ? "↓ " : row.carbonDelta > 0 ? "↑ " : "→ "}
+                      </span>
                       {fmtSignedTonnes(row.carbonDelta)}
                     </td>
                     <td className="py-3 pr-0 text-right">
                       {i > 0 && (
                         <button
+                          type="button"
                           className="btn text-xs"
                           onClick={() => {
                             loadAllocation(row.alloc);
@@ -123,6 +144,8 @@ export default function Compare({ scenario }: { scenario: UseScenario }) {
                           }}
                         >
                           Load
+                          {/* Distinguishes 4 identical "Load" buttons for AT. */}
+                          <span className="sr-only"> the {row.name} scenario</span>
                         </button>
                       )}
                     </td>
@@ -132,9 +155,9 @@ export default function Compare({ scenario }: { scenario: UseScenario }) {
             </table>
           </div>
 
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-500" aria-live="polite">
             Loaded preset: <strong>{rows[selectedIdx]?.name ?? "—"}</strong>. Return to{" "}
-            <a href="/allocate" className="underline">Allocate</a> to tune.
+            <Link to="/allocate" className="underline">Allocate</Link> to tune.
           </div>
         </div>
       )}
