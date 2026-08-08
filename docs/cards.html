@@ -1,0 +1,128 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  @import url('');
+  :root{
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f8fafc;
+    --teal:#0f766e; --teal-l:#ccfbf1; --rose:#be123c; --rose-l:#ffe4e6;
+    --amber:#b45309; --green:#047857; --green-l:#d1fae5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;
+       color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+  .card{width:1200px;height:650px;padding:40px 64px;display:flex;flex-direction:column;
+        border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .kicker{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:700}
+  h1{font-size:50px;line-height:1.05;letter-spacing:-.025em;margin-top:14px;font-weight:800}
+  h2{font-size:34px;line-height:1.1;letter-spacing:-.02em;margin-top:10px;font-weight:800}
+  .sub{font-size:19px;color:var(--muted);margin-top:14px;line-height:1.5;max-width:800px}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;
+        font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:18px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);font-size:16px}
+  .dot{width:22px;height:22px;border-radius:6px;background:var(--teal);display:inline-block}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+  .stat{border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat .n{font-size:38px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .up{color:var(--green)} .down{color:var(--green)} .bad{color:var(--rose)}
+  table{width:100%;border-collapse:collapse;margin-top:34px;font-size:17px}
+  th{text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--muted);padding:0 0 12px;border-bottom:1px solid var(--line);font-weight:700}
+  td{padding:15px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  td.r,th.r{text-align:right}
+  .pill{display:inline-block;padding:4px 11px;border-radius:999px;font-size:13px;font-weight:700}
+  .p-up{background:var(--green-l);color:var(--green)}
+  .p-dn{background:var(--rose-l);color:var(--rose)}
+  .p-fl{background:#f1f5f9;color:var(--muted)}
+  .bars{margin-top:22px}
+  .bar{display:flex;align-items:center;gap:16px;margin-bottom:10px;font-size:17px}
+  .bar .nm{width:250px;color:var(--ink);font-weight:600}
+  .bar .tr{flex:1;height:26px;background:#f1f5f9;border-radius:6px;position:relative}
+  .bar .fl{position:absolute;top:0;bottom:0;border-radius:6px}
+  .bar .vl{width:130px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:15px}
+  .axis{display:flex;font-size:12px;color:var(--muted);margin-left:266px;
+        justify-content:space-between;border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .diag{margin-top:24px;display:flex;align-items:center;gap:26px}
+  .box{border:2px solid var(--ink);border-radius:14px;padding:22px 26px;flex:1}
+  .box h3{font-size:19px;font-weight:800} .box p{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.5}
+  .box .tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:700}
+  .link{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--teal);font-weight:700;font-size:15px}
+  .link .ln{width:2px;height:34px;background:var(--teal)}
+  .chk{display:grid;grid-template-columns:1fr 1fr;gap:11px 30px;margin-top:22px;font-size:15px}
+  .chk div{display:flex;gap:12px;align-items:flex-start;line-height:1.45}
+  .chk .m{color:var(--green);font-weight:800}
+</style>
+
+<!-- 1. TITLE -->
+<section class="card">
+  <div class="kicker">NextGen Innovation 2026 · Smart Cities &amp; Sustainability</div>
+  <h1>Every other entry uses AI<br>to <span style="text-decoration:underline;text-decoration-color:var(--teal);text-underline-offset:8px">decide</span> for you.<br>BudgetBallot shows you <span style="text-decoration:underline;text-decoration-color:var(--teal);text-underline-offset:8px">why</span>.</h1>
+  <p class="sub">A participatory budgeting simulator. Move one slider and watch service outcomes, equity, and carbon emissions move together, with every number showing the factors that produced it.</p>
+  <div class="foot"><div class="brand"><span class="dot"></span>BudgetBallot</div><div>bbfinal-mu.vercel.app</div></div>
+</section>
+
+<!-- 2. THE COUPLING -->
+<section class="card">
+  <div class="kicker">The core idea</div>
+  <h2>One decision. Three consequences.</h2>
+  <p class="sub">Most budget tools stop at dollars. Every service here also carries an emissions profile, so a funding choice has a climate consequence in the same breath as a service consequence.</p>
+  <div class="grid3">
+    <div class="stat"><div class="n">61 &rarr; 84.2</div><div class="l">Transit reliability index<br><span class="pill p-up">▲ boosted</span></div></div>
+    <div class="stat"><div class="n down">&minus;25,371</div><div class="l">Tonnes CO₂e per year<br><span class="pill p-up">↓ below baseline</span></div></div>
+    <div class="stat"><div class="n bad">&minus;57.2</div><div class="l">Road maintenance index<br><span class="pill p-dn">▼ cut</span></div></div>
+  </div>
+  <p class="sub" style="font-size:17px;margin-top:22px;background:#f8fafc;padding:20px 24px;border-radius:12px;max-width:none">Moving $66.1M from roads into transit cuts emissions sharply, nudges equity up, and pushes road maintenance into failure. The tool shows you the bill.</p>
+  <div class="foot"><div class="brand"><span class="dot"></span>BudgetBallot</div><div>Ridgeport · pop. 248,000 · $1.2B general fund</div></div>
+</section>
+
+<!-- 3. CARBON DIRECTION -->
+<section class="card">
+  <div class="kicker">Why trade-offs are real</div>
+  <h2>Some services cut carbon.<br>Others raise it.</h2>
+  <p class="sub" style="font-size:19px">Emissions effect of increasing each service's funding. Because the signs differ, no allocation maximizes everything.</p>
+  <div class="bars">
+    <div class="bar"><div class="nm">Public Transit</div><div class="tr"><div class="fl" style="right:50%;width:31%;background:var(--green)"></div></div><div class="vl">−14,905 t</div></div>
+    <div class="bar"><div class="nm">Parks &amp; Urban Forestry</div><div class="tr"><div class="fl" style="right:50%;width:14%;background:var(--green)"></div></div><div class="vl">−6,120 t</div></div>
+    <div class="bar"><div class="nm">Affordable Housing</div><div class="tr"><div class="fl" style="right:50%;width:2%;background:#94a3b8"></div></div><div class="vl">≈ neutral</div></div>
+    <div class="bar"><div class="nm">Police Services</div><div class="tr"><div class="fl" style="left:50%;width:2%;background:#94a3b8"></div></div><div class="vl">≈ neutral</div></div>
+    <div class="bar"><div class="nm">Fire &amp; EMS</div><div class="tr"><div class="fl" style="left:50%;width:3%;background:#94a3b8"></div></div><div class="vl">≈ neutral</div></div>
+    <div class="bar"><div class="nm">Road Expansion &amp; Maint.</div><div class="tr"><div class="fl" style="left:50%;width:28%;background:var(--rose)"></div></div><div class="vl">+10,466 t</div></div>
+    <div class="axis"><span>reduces emissions</span><span>baseline</span><span>increases emissions</span></div>
+  </div>
+  <div class="foot"><div class="brand"><span class="dot"></span>BudgetBallot</div><div>12 services modeled · 187,500 tCO₂e baseline</div></div>
+</section>
+
+<!-- 4. PARITY -->
+<section class="card">
+  <div class="kicker">Technical architecture</div>
+  <h2>The model exists twice.<br>A test proves they agree.</h2>
+  <p class="sub" style="font-size:19px">Instant local feedback needs the model in the browser. A trustworthy server needs it on the backend. Two implementations normally drift, so we made drift impossible.</p>
+  <div class="diag">
+    <div class="box"><div class="tag">Client</div><h3>engine/impact.ts</h3><p>TypeScript. Runs on every slider drag. No network round trip, no latency.</p></div>
+    <div class="link"><div class="ln"></div>parity.test.ts<div class="ln"></div></div>
+    <div class="box"><div class="tag">Server</div><h3>server/engine.js</h3><p>JavaScript. Authoritative for anything persisted or shared between users.</p></div>
+  </div>
+  <p class="sub" style="font-size:16px;margin-top:20px">The harness drives <strong>both</strong> engines with the baseline allocation, twelve randomized allocations, and every service swept across its full funding range. If they ever disagree, the build fails.</p>
+  <div class="foot"><div class="brand"><span class="dot"></span>BudgetBallot</div><div>90 tests passing · 0 failing</div></div>
+</section>
+
+<!-- 5. RIGOUR -->
+<section class="card">
+  <div class="kicker">Engineering rigour</div>
+  <h2>Ninety tests. WCAG AA.<br>Zero LLM calls.</h2>
+  <div class="grid3">
+    <div class="stat"><div class="n">90</div><div class="l">automated tests passing, zero failing</div></div>
+    <div class="stat"><div class="n">5.47:1</div><div class="l">contrast on the primary action, up from a failing 3.03:1</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">runtime dependencies, 64 KB gzipped total</div></div>
+  </div>
+  <div class="chk">
+    <div><span class="m">✓</span><span>Sliders speak dollars, not integers: <em>“168 million dollars, boosted above baseline”</em></span></div>
+    <div><span class="m">✓</span><span>Status shown by glyph <strong>and</strong> word, never colour alone. Readable in greyscale.</span></div>
+    <div><span class="m">✓</span><span>Live regions announce every metric change to screen readers</span></div>
+    <div><span class="m">✓</span><span>Writes authenticated, rate limited, validated. Reads public by design.</span></div>
+    <div><span class="m">✓</span><span>A test asserts an allocation exists that helps services and hurts carbon</span></div>
+    <div><span class="m">✓</span><span>Explanations computed, not generated. They cannot hallucinate.</span></div>
+  </div>
+  <div class="foot"><div class="brand"><span class="dot"></span>BudgetBallot</div><div>github.com/skodityala/budgetballot</div></div>
+</section>
