@@ -1,0 +1,36 @@
+services:
+  # BudgetBallot runs as ONE web service: Express serves the built dist/ as
+  # static files and handles /api/* in the same process. No separate static
+  # site, no CORS, no proxy config in production.
+  - type: web
+    name: budgetballot
+    runtime: node
+    plan: free
+    # `npm ci` for a reproducible install from package-lock.json.
+    # `npm run build` = tsc --noEmit && vite build → dist/
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # REQUIRED. Not set here on purpose — `sync: false` makes Render prompt
+      # for it in the dashboard so the secret never lands in git.
+      # Generate one with:
+      #   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+      - key: BUDGETBALLOT_WRITE_KEY
+        sync: false
+      # Persist saved scenarios on the mounted disk below. Without a disk,
+      # the store degrades to in-memory (reads still work; writes don't
+      # survive a restart).
+      - key: BUDGETBALLOT_DATA_DIR
+        value: /var/data
+    # OPTIONAL: a 1 GB disk makes saved scenarios durable across restarts and
+    # deploys. Free-plan services cannot mount disks — if you're on free,
+    # delete this whole `disk:` block AND the BUDGETBALLOT_DATA_DIR var above;
+    # the app will run fine with in-memory scenarios.
+    disk:
+      name: budgetballot-data
+      mountPath: /var/data
+      sizeGB: 1

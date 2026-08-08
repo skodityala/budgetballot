@@ -21,28 +21,35 @@ If `BUDGETBALLOT_WRITE_KEY` is unset, mutating routes return `503 { "error": "se
 
 ## 2. Deploy
 
-Whatever provider you're using, the shape is:
+**→ See [`DEPLOY.md`](./DEPLOY.md) for exact, step-by-step instructions.**
+
+Short version: it's now a **single deployable unit**. Express serves the built
+`dist/` *and* the API in one process, with an SPA fallback so `/allocate`,
+`/impact`, `/compare` and `/about` survive a hard refresh or a shared deep link.
 
 ```bash
-# Build:
-npm ci                      # or: npm install
-npm run build               # produces dist/ for the static frontend
-
-# Run (single-process, serves API on $PORT):
-node server/index.js
+npm ci
+npm run build          # → dist/
+npm start              # one process: static SPA + API on $PORT
 ```
 
-Two shapes work well:
+Both provider configs are committed at repo root and ready to use:
 
-**A. Single Node process, static frontend served separately (recommended)**
-- Serve `dist/` from any static host (Vercel, Netlify, S3+CloudFront, GitHub Pages).
-- Run `node server/index.js` somewhere with `BUDGETBALLOT_WRITE_KEY` set.
-- Point the frontend's `/api/*` requests at the API host (either via a proxy config, or by making the frontend origin the same as the API and dropping the proxy).
+| File | Provider | Notes |
+|---|---|---|
+| `render.yaml` | **Render** (recommended) | Persistent process; matches the architecture. Optional 1 GB disk makes saved scenarios durable. Free plan: delete the `disk:` block first — see `DEPLOY.md` §1. |
+| `vercel.json` + `api/index.js` | Vercel | CDN serves `dist/`, Express runs as a serverless function. Filesystem is read-only, so saved scenarios are in-memory only — `DEPLOY.md` §2 explains exactly what does and doesn't work. |
 
-**B. Single origin (simpler)**
-- Add a static file middleware to `server/index.js` that serves `dist/` for anything not matching `/api/*`. Not done here on purpose — it's a 4-line addition and locks you into a single-process deploy.
+Env vars are in §1 above. Verification steps (including the deep-link refresh
+check, which is the most common demo-day failure) are in `DEPLOY.md` §3.
 
-The Vite dev server (`npm run dev`) already proxies `/api` to `http://localhost:8787`.
+To rehearse the production path locally before deploying:
+
+```bash
+npm run build
+BUDGETBALLOT_WRITE_KEY=devkey npm start
+./scripts/verify-runtime.sh    # 26 checks — expect ALL RUNTIME CHECKS GREEN
+```
 
 ---
 
