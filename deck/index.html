@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BudgetBallot — NextGen Innovation 2026</title>
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #e2e8f0;
+    --bg: #fafaf7;
+    --card: #ffffff;
+    --accent: #0ea5a4;
+    --accent-2: #0891b2;
+    --good: #059669;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif; }
+  body { overflow: hidden; }
+  .stage { position: fixed; inset: 0; display: grid; place-items: center; padding: 5vh 6vw; }
+  .slide {
+    display: none; width: 100%; max-width: 1100px; max-height: 88vh;
+    background: var(--card); border-radius: 20px; padding: 4vh 5vw;
+    box-shadow: 0 10px 40px rgba(15,23,42,0.08);
+    overflow: auto;
+  }
+  .slide.active { display: block; animation: fade 240ms ease-out; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .kicker { color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; }
+  h1 { font-size: clamp(28px, 4.8vw, 54px); line-height: 1.05; margin: 8px 0 20px; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(22px, 3vw, 38px); line-height: 1.15; margin: 6px 0 18px; letter-spacing: -0.01em; }
+  p, li { color: var(--muted); font-size: clamp(15px, 1.4vw, 20px); line-height: 1.55; margin: 0 0 12px; }
+  strong, .ink { color: var(--ink); }
+  .accent { color: var(--accent); }
+  .good { color: var(--good); }
+  .bad { color: var(--bad); }
+  .grid { display: grid; gap: 20px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .stat {
+    border: 1px solid var(--line); border-radius: 14px; padding: 18px;
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+  }
+  .stat .num { font-size: 34px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+  .stat .lbl { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #f1f5f9; color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  code { font-family: "SF Mono", "JetBrains Mono", ui-monospace, monospace; background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 16px 20px; border-radius: 12px; overflow: auto; font-size: 14px; line-height: 1.6; }
+  .quote {
+    font-size: clamp(18px, 2vw, 24px); color: var(--ink); line-height: 1.5;
+    padding: 20px 24px; border-left: 4px solid var(--accent); background: #f8fafc; border-radius: 0 12px 12px 0;
+  }
+  .footer {
+    position: fixed; bottom: 14px; left: 20px; right: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    color: #94a3b8; font-size: 12px; letter-spacing: 0.06em;
+  }
+  .footer .brand { display: flex; align-items: center; gap: 8px; }
+  .footer .brand svg { width: 18px; height: 18px; }
+  .nav { color: #cbd5e1; }
+  .hint { position: fixed; top: 14px; right: 20px; color: #94a3b8; font-size: 11px; letter-spacing: 0.05em; }
+  ul.clean { padding-left: 20px; }
+  ul.clean li { margin-bottom: 10px; }
+  .headline-xl { font-size: clamp(32px, 5.5vw, 68px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; color: var(--ink); }
+  .headline-xl em { font-style: normal; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 4px; text-underline-offset: 6px; }
+
+  /* mock UI */
+  .mock {
+    border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+  .mock .row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #f1f5f9; }
+  .mock .row:last-child { border-bottom: none; }
+  .mock .bar { height: 8px; border-radius: 999px; background: #e2e8f0; overflow: hidden; margin-top: 6px; }
+  .mock .bar > span { display: block; height: 100%; }
+  .mock .name { color: var(--ink); font-weight: 600; }
+  .mock .num { font-weight: 700; }
+
+  @media (max-width: 720px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="hint">← / → to navigate · <span id="counter">1 / 10</span></div>
+
+<div class="stage">
+
+<!-- 1 -->
+<section class="slide active">
+  <div class="kicker">NextGen Innovation 2026 · 🏙️ Smart Cities & Sustainability</div>
+  <h1 class="headline-xl">
+    Every other entry uses AI to <em>decide</em> for you.<br />
+    BudgetBallot shows you <em>why</em>.
+  </h1>
+  <p style="max-width: 780px; margin-top: 20px;">
+    A participatory budgeting simulator that lets any citizen allocate a city's budget and see —
+    transparently, with every factor shown — the projected impact on service outcomes, equity,
+    and carbon emissions.
+  </p>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="kicker">The Problem</div>
+  <h2>City budgets get decided in rooms most people never see.</h2>
+  <div class="grid grid-2" style="margin-top: 24px;">
+    <div>
+      <p>A mid-size U.S. city moves roughly <strong>$1.2B</strong> a year across a dozen departments.
+        Residents get, at best, a bar chart in a PDF.</p>
+      <p>There's no way for a citizen — or a council member — to <strong>explore trade-offs</strong> before the vote:
+      <ul class="clean">
+        <li>What happens to equity if we cut the transit budget by 20%?</li>
+        <li>Does the road expansion actually raise emissions, or offset them?</li>
+        <li>Which single move buys the most service outcome per dollar?</li>
+      </ul></p>
+    </div>
+    <div class="stat">
+      <div class="lbl">The gap</div>
+      <div class="num" style="font-size: 26px; line-height: 1.3; color: var(--ink);">
+        Budgets are decided <span class="bad">opaquely.</span><br />
+        Consequences are lived <span class="ink">publicly.</span>
+      </div>
+      <p style="margin-top: 14px;">BudgetBallot closes that gap with a tool a resident can use in a browser.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="kicker">The Solution</div>
+  <h2>Move a slider. Three numbers move together.</h2>
+  <div class="grid grid-3" style="margin-top: 20px;">
+    <div class="stat"><div class="lbl">Service outcome</div><div class="num">78 <span style="font-size: 14px; color: var(--good);">+17</span></div><div class="bar"><span style="width: 78%; background: var(--accent);"></span></div></div>
+    <div class="stat"><div class="lbl">Equity score</div><div class="num">64.2 <span style="font-size: 14px; color: var(--good);">+4.2</span></div><div class="bar"><span style="width: 64%; background: #38bdf8;"></span></div></div>
+    <div class="stat"><div class="lbl">Emissions (tCO₂e / yr)</div><div class="num">174,960 <span style="font-size: 14px; color: var(--good);">-12,540</span></div><div class="bar"><span style="width: 55%; background: var(--good);"></span></div></div>
+  </div>
+  <p style="margin-top: 22px;">Instant, local, no round-trip. The client-side engine renders every impact number the moment the slider moves.</p>
+  <div class="quote" style="margin-top: 22px;">
+    Click any number → see the four factors that produced it, each with a plain-English note.
+    <strong class="ink">Zero opaque coefficients.</strong>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="kicker">The Differentiator</div>
+  <h2>Transparent model, not generative model.</h2>
+  <div class="grid grid-2" style="margin-top: 20px;">
+    <div>
+      <p><strong class="ink">Most entries at this hackathon will be LLM wrappers with a chat box.</strong> That's fine — but for civic decisions, "the model said so" isn't a defensible answer.</p>
+      <p>BudgetBallot's math is documented, decomposed, and auditable. If a service outcome rises from 61 to 78, the UI shows you the four factors that produced it:</p>
+      <div class="mock">
+        <div class="row"><span class="name">Baseline outcome</span><span class="num">61</span></div>
+        <div class="row"><span class="name">Funding change</span><span class="num good">+$67M</span></div>
+        <div class="row"><span class="name">Elasticity</span><span class="num">0.75</span></div>
+        <div class="row"><span class="name">Projected change</span><span class="num good">+17</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="pill" style="background: #ecfeff; color: var(--accent-2);">Innovation & Creativity</div>
+      <div class="pill" style="background: #f0fdf4; color: var(--good); margin-left: 6px;">Impact & Relevance</div>
+      <div class="pill" style="background: #fdf4ff; color: #a21caf; margin-left: 6px;">Technical Excellence</div>
+      <p style="margin-top: 20px;">Being contrarian on an AI-forward stage <strong class="ink">is</strong> the innovation. Every impact number in this app is legible in a way a chatbot can't be.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="kicker">The Carbon Coupling</div>
+  <h2>Budget vs. climate, in the same view.</h2>
+  <p>Every service has a signed carbon elasticity. Some services <span class="good">reduce</span> emissions when funded (transit, retrofits, parks). Some <span class="bad">increase</span> them (road expansion, larger vehicle fleets). Both are real. Both matter.</p>
+  <div class="grid grid-2" style="margin-top: 20px;">
+    <div class="mock">
+      <div class="lbl" style="color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Transit-first / green</div>
+      <div class="row"><span class="name">Allocated</span><span class="num">$1.20B</span></div>
+      <div class="row"><span class="name">Equity</span><span class="num good">+4.2</span></div>
+      <div class="row"><span class="name">Δ Emissions</span><span class="num good">−12,540 tCO₂e</span></div>
+    </div>
+    <div class="mock">
+      <div class="lbl" style="color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Roads-first</div>
+      <div class="row"><span class="name">Allocated</span><span class="num">$1.24B <span class="bad" style="font-size: 12px;">(over)</span></span></div>
+      <div class="row"><span class="name">Equity</span><span class="num bad">−1.8</span></div>
+      <div class="row"><span class="name">Δ Emissions</span><span class="num bad">+9,120 tCO₂e</span></div>
+    </div>
+  </div>
+  <p style="margin-top: 20px;">The trade-off is not an editorial claim — it's a <code>Factor</code> breakdown the user can click open. There is even a test whose sole job is to prove such trade-offs exist in the model (<code>impact.test.ts</code>).</p>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="kicker">Technical Architecture</div>
+  <h2>Two engines, one model, one automated agreement.</h2>
+  <p>The impact math lives in two places:</p>
+  <div class="grid grid-2" style="margin-top: 16px;">
+    <div class="stat"><div class="lbl">Client (TypeScript)</div><div class="num" style="font-size: 20px; line-height: 1.4;"><code>src/engine/impact.ts</code></div><p style="margin-top: 8px;">Runs in the browser. Zero round-trip on slider changes. Instant.</p></div>
+    <div class="stat"><div class="lbl">Server (JavaScript)</div><div class="num" style="font-size: 20px; line-height: 1.4;"><code>server/engine.js</code></div><p style="margin-top: 8px;">Canonical version. Powers <code>POST /api/impact</code>. Scriptable.</p></div>
+  </div>
+  <div class="quote" style="margin-top: 22px;">
+    <code>src/engine/parity.test.ts</code> drives both implementations with the same inputs and fails loudly if they disagree.
+    That's the safety net that makes it safe to iterate on the math.
+  </div>
+  <div class="grid grid-3" style="margin-top: 22px;">
+    <div class="stat"><div class="lbl">Tests passing</div><div class="num good">51 / 51</div></div>
+    <div class="stat"><div class="lbl">Test files</div><div class="num">4</div></div>
+    <div class="stat"><div class="lbl">Dependencies added</div><div class="num">0<span style="font-size: 14px; color: var(--muted);"> beyond baseline</span></div></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="kicker">The Narrator — Computed, Not Generated</div>
+  <h2>A plain-English explanation that cannot hallucinate.</h2>
+  <div class="quote" style="margin-top: 8px;">
+    "You moved <strong>$67M</strong> from Road Expansion & Maintenance into Public Transit. Public Transit rises from <strong>61 to 79</strong> — the largest single gain in this scenario. Equity <span class="good">improves by 4.2 points</span>, because the affected services carry heavy weight for underserved districts. Annual emissions <span class="good">fall by 12,540 tCO₂e</span>, driven almost entirely by Public Transit."
+  </div>
+  <div class="grid grid-2" style="margin-top: 22px;">
+    <div>
+      <p><strong class="ink">Computed</strong> from the impact report, not generated by a language model.</p>
+      <ul class="clean">
+        <li>No network. No API key. No LLM.</li>
+        <li>Works offline forever.</li>
+        <li>Same inputs → same words. Fully deterministic.</li>
+        <li>Cannot invent facts it doesn't have.</li>
+      </ul>
+    </div>
+    <div>
+      <p>Sentence <strong class="ink">structure</strong> varies with which effect is decisive — a virtuous-case paragraph reads differently from a trade-off one. Tested in <code>narrate.test.ts</code>.</p>
+      <div class="pill" style="background: #ecfdf5; color: var(--good);">User Experience & Design</div>
+      <div class="pill" style="background: #eff6ff; color: #1d4ed8; margin-left: 6px;">Presentation Quality</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="kicker">Impact & Who Uses This</div>
+  <h2>A tool that goes to work the day it's deployed.</h2>
+  <div class="grid grid-3" style="margin-top: 16px;">
+    <div class="stat"><div class="lbl">City councils</div><p style="margin-top: 8px;">Rehearse budget votes in the open. Publish the scenario alongside the ordinance.</p></div>
+    <div class="stat"><div class="lbl">Civic organizations</div><p style="margin-top: 8px;">Ground advocacy in the same math the city uses. Cite factor-level evidence.</p></div>
+    <div class="stat"><div class="lbl">Classrooms</div><p style="margin-top: 8px;">Government + civics + climate literacy in a browser tab. No install, no login.</p></div>
+  </div>
+  <p style="margin-top: 22px;">Because the seed dataset is <em>illustrative</em> and the engine is dataset-agnostic, any city can drop in its own budget + emissions factors and the same UI works — without touching the engine.</p>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="kicker">Scalability & Feasibility</div>
+  <h2>Small footprint. Real path to production.</h2>
+  <div class="grid grid-2" style="margin-top: 16px;">
+    <div>
+      <p><strong class="ink">Today:</strong></p>
+      <ul class="clean">
+        <li>Static frontend + tiny Express API + JSON persistence.</li>
+        <li>No database, no queue, no cloud lock-in. Runs on any Node host.</li>
+        <li>Write-key auth + rate limiting on mutations. Reads intentionally public.</li>
+      </ul>
+    </div>
+    <div>
+      <p><strong class="ink">Roadmap:</strong></p>
+      <ul class="clean">
+        <li>Real municipal datasets + peer-reviewed emissions factors.</li>
+        <li>Per-district equity projections.</li>
+        <li>Federated write auth (OIDC / municipal SSO).</li>
+        <li>Multi-year, cumulative emissions view.</li>
+        <li>Publisher mode: shareable read-only permalinks with the narrated paragraph as social preview.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="kicker">Team + Links</div>
+  <h2>BudgetBallot</h2>
+  <p style="max-width: 720px;">Built for NextGen Innovation 2026 · Smart Cities & Sustainability.</p>
+  <div class="grid grid-2" style="margin-top: 20px;">
+    <div class="stat">
+      <div class="lbl">Repository</div>
+      <div class="num" style="font-size: 18px; line-height: 1.4;">github.com/skodityala/budgetballot</div>
+      <p style="margin-top: 8px;">Full source, tests, and architecture docs.</p>
+    </div>
+    <div class="stat">
+      <div class="lbl">Live demo</div>
+      <div class="num" style="font-size: 18px; line-height: 1.4; color: var(--muted);">See README (LIVE_DEMO_URL)</div>
+      <p style="margin-top: 8px;">Open the allocator, move a slider, watch three numbers move.</p>
+    </div>
+  </div>
+  <div class="quote" style="margin-top: 24px;">
+    Every other entry uses AI to <strong>decide</strong> for you.<br />
+    BudgetBallot shows you <strong class="accent">why</strong>.
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  <div class="brand">
+    <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#0f172a"/><rect x="6" y="18" width="4" height="8" fill="#0ea5a4"/><rect x="12" y="12" width="4" height="14" fill="#38bdf8"/><rect x="18" y="8" width="4" height="18" fill="#a3e635"/><rect x="24" y="14" width="2" height="12" fill="#f59e0b"/></svg>
+    <span>BudgetBallot · NextGen Innovation 2026</span>
+  </div>
+  <div class="nav">← / → · Home · End</div>
+</div>
+
+<script>
+  (function () {
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const counter = document.getElementById("counter");
+    let i = 0;
+    function show(n) {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((s, idx) => s.classList.toggle("active", idx === i));
+      counter.textContent = (i + 1) + " / " + slides.length;
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { show(i + 1); e.preventDefault(); }
+      else if (e.key === "ArrowLeft" || e.key === "PageUp") { show(i - 1); e.preventDefault(); }
+      else if (e.key === "Home") { show(0); }
+      else if (e.key === "End") { show(slides.length - 1); }
+    });
+    // Also allow click-forward for demos on a laptop trackpad.
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("a, button, input")) return;
+      show(i + 1);
+    });
+    show(0);
+  })();
+</script>
+</body>
+</html>

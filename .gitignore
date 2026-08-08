@@ -1,0 +1,17 @@
+# Node
+node_modules/
+dist/
+.DS_Store
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Runtime persistence (regenerated from seed.js)
+server/data/
+
+# Editor
+.vscode/
+.idea/
