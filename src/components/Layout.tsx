@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </a>
 
       <header className="border-b border-slate-200 bg-white sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center gap-x-4 gap-y-2">
           <NavLink
             to="/"
             className="flex items-center gap-2 font-semibold text-ink"
@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           {/* A real list, so assistive tech announces "5 items" and users can
               navigate item-by-item. aria-current="page" is set by NavLink. */}
           <nav className="ml-auto" aria-label="Main">
-            <ul className="flex gap-1 text-sm list-none m-0 p-0">
+            <ul className="flex flex-wrap gap-1 text-sm list-none m-0 p-0">
               {nav.map((n) => (
                 <li key={n.to}>
                   <NavLink

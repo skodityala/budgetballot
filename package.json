@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "start": "NODE_ENV=production node server/index.js",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "vercel-build": "vite build"
   },
   "dependencies": {
     "express": "^4.19.2",
